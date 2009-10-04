@@ -30,7 +30,7 @@ sub _find_primary_driver {
     my $self = shift;
     my %installed = DBI->installed_drivers;
     my @keys = keys %installed;
-    shift @keys;
+    return $keys[0];
 }
 
 1;
