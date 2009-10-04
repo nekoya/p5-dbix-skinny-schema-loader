@@ -44,8 +44,14 @@ sub table_columns {
 sub table_pk {
     my ($self, $table) = @_;
     my @keys = $self->dbh->primary_key(undef, undef, $table);
-    confess 'DBIx::Skinny is not support composite primary keys' if $#keys;
-    return @keys[0];
+    if ( @keys ) {
+        confess "DBIx::Skinny is not support composite primary keys" if $#keys;
+        return $keys[0];
+    }
+    my $columns = $self->table_columns($table);
+    return $columns->[0] if scalar @$columns == 1;
+    return 'id' if ( grep { $_ eq 'id' } @$columns );
+    confess "Could not found primary key of $table";
 }
 
 1;
