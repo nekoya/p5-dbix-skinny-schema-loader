@@ -17,4 +17,4 @@ Mock::SQLite->dbh($dbh);
 Mock::SQLite->setup_test_db;
 
 ok my $loader = DBIx::Skinny::Schema::Loader->new(dbh => $dbh), 'created loader object';
-is_deeply [sort @{$loader->tables}], [qw/authors books genders prefectures/], 'tables';
+is_deeply $loader->tables, [qw/authors books genders prefectures/], 'tables';
