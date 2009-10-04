@@ -18,6 +18,8 @@ has impl => (
 no Any::Moose;
 __PACKAGE__->meta->make_immutable;
 
+use Text::MicroTemplate qw(:all);
+
 sub BUILD {
     my $self = shift;
     my $driver = $self->_find_primary_driver;
@@ -31,6 +33,24 @@ sub _find_primary_driver {
     my %installed = DBI->installed_drivers;
     my @keys = keys %installed;
     return $keys[0];
+}
+
+sub make_schema_at {
+    my ($self, $schema_class) = @_;
+    my $schema = "package $schema_class;\nuse DBIx::Skinny::Schema\n\n";
+    my $renderer = build_mt(
+        "install_table <?= \$_[0] ?> => schema {\n".
+        "    pk '<?= \$_[1] ?>';\n".
+        "    columns qw/<?= \$_[2] ?>/;\n".
+        "};\n\n"
+    );
+    $schema .= $renderer->(
+        $_,
+        $self->table_pk($_),
+        join " ", @{ $self->table_columns($_) }
+    )->as_string for @{ $self->tables };
+    $schema .= "1;";
+    return $schema;
 }
 
 1;

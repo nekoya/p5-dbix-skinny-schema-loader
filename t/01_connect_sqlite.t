@@ -24,3 +24,5 @@ is $loader->table_pk('authors'), 'id', 'authors pk';
 is $loader->table_pk('books'), 'id', 'books pk';
 is $loader->table_pk('genders'), 'name', 'genders pk';
 is $loader->table_pk('prefectures'), 'name', 'prefectures pk';
+
+print $loader->make_schema_at('MyApp::Schema');
