@@ -1,7 +1,10 @@
 use strict;
 use warnings;
+use lib './t';
 use FindBin::libs;
-use Test::More tests => 1;
+use Data::Dumper;
+use Perl6::Say;
+use Test::More tests => 3;
 
 use DBI;
 use DBIx::Skinny::Schema::Loader;
@@ -14,5 +17,4 @@ Mock::SQLite->dbh($dbh);
 Mock::SQLite->setup_test_db;
 
 ok my $loader = DBIx::Skinny::Schema::Loader->new(dbh => $dbh), 'created loader object';
-
-print join "\n", @{ $loader->tables };
+is_deeply [sort @{$loader->tables}], [qw/authors books genders prefectures/], 'tables';

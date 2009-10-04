@@ -1,9 +1,10 @@
 use strict;
 use warnings;
+use lib './t';
 use FindBin::libs;
 use Data::Dumper;
 use Perl6::Say;
-use Test::More tests => 1;
+use Test::More tests => 3;
 
 use DBI;
 use DBIx::Skinny::Schema::Loader;
@@ -20,4 +21,4 @@ Mock::MySQL->dbh($dbh);
 Mock::MySQL->setup_test_db;
 
 ok my $loader = DBIx::Skinny::Schema::Loader->new(dbh => $dbh), 'created loader object';
-is_deeply $loader->tables, [qw/authors books genders prefectures/], 'tables';
+is_deeply [sort @{$loader->tables}], [qw/authors books genders prefectures/], 'tables';

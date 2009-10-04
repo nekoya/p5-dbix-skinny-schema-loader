@@ -9,43 +9,28 @@ has dbh => (
     required => 1,
 );
 
-has quoter => (
-    is      => 'ro',
-    isa     => 'Str',
-    lazy    => 1,
-    default => sub { shift->dbh->get_info(29) },
+has impl => (
+    is      => 'rw',
+    isa     => 'DBIx::Skinny::Schema::Loader::DBI',
+    handles => [qw/tables/],
 );
 
-has namesep => (
-    is      => 'ro',
-    isa     => 'Str',
-    lazy    => 1,
-    default => sub { shift->dbh->get_info(41) },
-);
-
-has tables => (
-    is      => 'ro',
-    isa     => 'ArrayRef[Str]',
-    lazy    => 1,
-    default => sub {
-        my $self = shift;
-        my $quoter = $self->quoter;
-        my $namesep = $self->namesep;
-        my @tables = $self->dbh->tables(undef, undef, '', '');
-        s/\Q$quoter\E//g for @tables;
-        s/^.*\Q$namesep\E// for @tables;
-        return \@tables;
-    },
-);
 no Any::Moose;
+__PACKAGE__->meta->make_immutable;
 
-sub _table_columns {
-    my ($self, $table) = @_;
-    my $sth = $self->dbh->prepare("select * from airlines where 1 = 0");
-    $sth->execute;
-    my $retval = \@{$sth->{NAME_lc}};
-    $sth->finish;
-    return $retval;
+sub BUILD {
+    my $self = shift;
+    my $driver = $self->_find_primary_driver;
+    my $impl = __PACKAGE__ . "::DBI::$driver";
+    eval "use $impl"; ## no critic
+    $self->impl($impl->new(dbh => $self->dbh));
+}
+
+sub _find_primary_driver {
+    my $self = shift;
+    my %installed = DBI->installed_drivers;
+    my @keys = keys %installed;
+    shift @keys;
 }
 
 1;
