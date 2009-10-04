@@ -12,7 +12,7 @@ has dbh => (
 has impl => (
     is      => 'rw',
     isa     => 'DBIx::Skinny::Schema::Loader::DBI',
-    handles => [qw/tables table_columns/],
+    handles => [qw/tables table_columns table_pk/],
 );
 
 no Any::Moose;

@@ -30,6 +30,8 @@ has tables => (
 no Any::Moose;
 __PACKAGE__->meta->make_immutable;
 
+use Carp;
+
 sub table_columns {
     my ($self, $table) = @_;
     my $sth = $self->dbh->prepare("select * from $table where 1 = 0");
@@ -37,6 +39,13 @@ sub table_columns {
     my $retval = \@{$sth->{NAME_lc}};
     $sth->finish;
     return $retval;
+}
+
+sub table_pk {
+    my ($self, $table) = @_;
+    my @keys = $self->dbh->primary_key(undef, undef, $table);
+    confess 'DBIx::Skinny is not support composite primary keys' if $#keys;
+    return @keys[0];
 }
 
 1;
