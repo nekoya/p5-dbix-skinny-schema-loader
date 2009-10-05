@@ -4,7 +4,7 @@ use lib './t';
 use FindBin::libs;
 use Data::Dumper;
 use Perl6::Say;
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Test::Exception;
 
 use DBI;
