@@ -51,8 +51,12 @@ sub load_schema {
 }
 
 sub make_schema_at {
-    my ($self, $schema_class) = @_;
-    my $schema = "package $schema_class;\nuse DBIx::Skinny::Schema\n\n";
+    my ($class, $schema_class, $options, $connect_info) = @_;
+
+    my $self = $class->new;
+    $self->connect(@{ $connect_info });
+
+    my $schema = "package $schema_class;\nuse DBIx::Skinny::Schema;\n\n";
     my $renderer = build_mt(
         "install_table <?= \$_[0] ?> => schema {\n".
         "    pk '<?= \$_[1] ?>';\n".
@@ -61,9 +65,9 @@ sub make_schema_at {
     );
     $schema .= $renderer->(
         $_,
-        $self->table_pk($_),
-        join " ", @{ $self->table_columns($_) }
-    )->as_string for @{ $self->tables };
+        $self->impl->table_pk($_),
+        join " ", @{ $self->impl->table_columns($_) }
+    )->as_string for @{ $self->impl->tables };
     $schema .= "1;";
     return $schema;
 }
