@@ -14,10 +14,10 @@ has impl => (
     isa     => 'DBIx::Skinny::Schema::Loader::DBI',
     handles => [qw/tables table_columns table_pk/],
 );
-
 no Any::Moose;
 __PACKAGE__->meta->make_immutable;
 
+use DBI;
 use Text::MicroTemplate qw(:all);
 
 sub BUILD {
@@ -33,6 +33,27 @@ sub _find_primary_driver {
     my %installed = DBI->installed_drivers;
     my @keys = keys %installed;
     return $keys[0];
+}
+
+sub load_schema {
+    my $class = shift;
+
+    # import on concrete class namespace
+    eval "use DBIx::Skinny::Schema"; ## no critic
+
+    (my $skinny_class = caller) =~ s/::Schema//;
+    my $dbh = DBI->connect(
+        $skinny_class->attribute->{ dsn },
+        $skinny_class->attribute->{ user },
+        $skinny_class->attribute->{ password },
+    ) or confess 'connect DB failed';
+
+    my $self = $class->new(dbh => $dbh);
+    my $schema = caller->schema_info;
+    for my $table ( @{ $self->tables } ) {
+        $schema->{ $table }->{ pk } = $self->table_pk($table);
+        $schema->{ $table }->{ columns } = $self->table_columns($table);
+    }
 }
 
 sub make_schema_at {

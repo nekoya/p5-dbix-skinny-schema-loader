@@ -31,7 +31,8 @@ sub setup_test_db {
             CREATE TABLE prefectures (
                 name  TEXT PRIMARY KEY
             )
-        }
+        },
+        q{ INSERT INTO books VALUES (1, 1, 'book1') },
     );
     $self->dbh->do($_) for @statements;
 }
