@@ -122,8 +122,9 @@ it supports MySQL and SQLite, PostgreSQL is not supported yet.
 
 =head2 connect( $dsn, $user, $pass )
 
-invoke concrete db driver class named "DBIx::Skinny::Schema::Loader::DBI::XXXX".
 perhaps you don't have to use it manually.
+
+invoke concrete db driver class named "DBIx::Skinny::Schema::Loader::DBI::XXXX".
 
 =head2 load_schema
 
