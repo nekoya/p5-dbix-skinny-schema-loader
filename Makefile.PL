@@ -2,12 +2,10 @@ use inc::Module::Install;
 name 'DBIx-Skinny-Schema-Loader';
 all_from 'lib/DBIx/Skinny/Schema/Loader.pm';
 
-requires 'Any::Moose';
 requires 'Exporter';
 requires 'DBI';
-requires 'DBI::Skinny';
-requires 'DBI::Skinny::Schema';
-requires 'Text::MicroTemplate';
+requires 'DBIx::Skinny';
+requires 'DBIx::Skinny::Schema';
 
 tests 't/*.t';
 author_tests 'xt';
