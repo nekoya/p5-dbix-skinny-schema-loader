@@ -3,36 +3,31 @@ package DBIx::Skinny::Schema::Loader;
 our $VERSION = '0.01';
 
 use Any::Moose;
-has dbh => (
-    is       => 'ro',
-    isa      => 'DBI::db',
-    required => 1,
-);
-
 has impl => (
     is      => 'rw',
     isa     => 'DBIx::Skinny::Schema::Loader::DBI',
-    handles => [qw/tables table_columns table_pk/],
 );
 no Any::Moose;
 __PACKAGE__->meta->make_immutable;
 
+use Carp;
 use DBI;
 use Text::MicroTemplate qw(:all);
 
-sub BUILD {
-    my $self = shift;
-    my $driver = $self->_find_primary_driver;
+sub connect {
+    my ($self, $dsn, $user, $pass) = @_;
+    $dsn =~ /^dbi:([^:]+):/;
+    my $driver = $1 or croak "Could not parse DSN";
+    croak "$driver is not supported by DBIx::Skinny::Schema::Loader yet"
+        unless $driver =~ /^(SQLite|mysql)$/;
     my $impl = __PACKAGE__ . "::DBI::$driver";
     eval "use $impl"; ## no critic
-    $self->impl($impl->new(dbh => $self->dbh));
-}
-
-sub _find_primary_driver {
-    my $self = shift;
-    my %installed = DBI->installed_drivers;
-    my @keys = keys %installed;
-    return $keys[0];
+    die $@ if $@;
+    $self->impl($impl->new({
+        dsn  => $dsn  || '',
+        user => $user || '',
+        pass => $pass || '',
+    }));
 }
 
 sub load_schema {
@@ -42,17 +37,16 @@ sub load_schema {
     eval "use DBIx::Skinny::Schema"; ## no critic
 
     (my $skinny_class = caller) =~ s/::Schema//;
-    my $dbh = DBI->connect(
+    my $self = $class->new;
+    $self->connect(
         $skinny_class->attribute->{ dsn },
         $skinny_class->attribute->{ user },
         $skinny_class->attribute->{ password },
-    ) or confess 'connect DB failed';
-
-    my $self = $class->new(dbh => $dbh);
+    );
     my $schema = caller->schema_info;
-    for my $table ( @{ $self->tables } ) {
-        $schema->{ $table }->{ pk } = $self->table_pk($table);
-        $schema->{ $table }->{ columns } = $self->table_columns($table);
+    for my $table ( @{ $self->impl->tables } ) {
+        $schema->{ $table }->{ pk } = $self->impl->table_pk($table);
+        $schema->{ $table }->{ columns } = $self->impl->table_columns($table);
     }
 }
 
