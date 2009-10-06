@@ -1,23 +1,17 @@
 package DBIx::Skinny::Schema::Loader;
+use base qw/Exporter/;
 
 our $VERSION = '0.01';
-
-use Any::Moose;
-extends any_moose('::Object'), 'Exporter';
-
 our @EXPORT_OK = qw(make_schema_at);
-
-has impl => (
-    is      => 'rw',
-    isa     => 'DBIx::Skinny::Schema::Loader::DBI',
-);
-no Any::Moose;
-__PACKAGE__->meta->make_immutable;
 
 use Carp;
 use DBI;
 use DBIx::Skinny::Schema;
-use Text::MicroTemplate qw(:all);
+
+sub new {
+    my ($class) = @_;
+    bless {}, $class;
+}
 
 sub connect {
     my ($self, $dsn, $user, $pass) = @_;
@@ -28,11 +22,11 @@ sub connect {
     my $impl = __PACKAGE__ . "::DBI::$driver";
     eval "use $impl"; ## no critic
     die $@ if $@;
-    $self->impl($impl->new({
+    $self->{ impl } = $impl->new({
         dsn  => $dsn  || '',
         user => $user || '',
         pass => $pass || '',
-    }));
+    });
 }
 
 sub load_schema {
@@ -46,9 +40,9 @@ sub load_schema {
         $skinny_class->attribute->{ password },
     );
     my $schema = caller->schema_info;
-    for my $table ( @{ $self->impl->tables } ) {
-        $schema->{ $table }->{ pk } = $self->impl->table_pk($table);
-        $schema->{ $table }->{ columns } = $self->impl->table_columns($table);
+    for my $table ( @{ $self->{ impl }->tables } ) {
+        $schema->{ $table }->{ pk } = $self->{ impl }->table_pk($table);
+        $schema->{ $table }->{ columns } = $self->{ impl }->table_columns($table);
     }
 }
 
@@ -63,19 +57,25 @@ sub make_schema_at {
         chomp $template;
         $schema .= $template . "\n\n";
     }
-    my $renderer = build_mt(
-        "install_table <?= \$_[0] ?> => schema {\n".
-        "    pk '<?= \$_[1] ?>';\n".
-        "    columns qw/<?= \$_[2] ?>/;\n".
-        "};\n\n"
-    );
-    $schema .= $renderer->(
-        $_,
-        $self->impl->table_pk($_),
-        join " ", @{ $self->impl->table_columns($_) }
-    )->as_string for @{ $self->impl->tables };
+    $schema .= $self->_make_install_table_text({
+        table   => $_,
+        pk      => $self->{ impl }->table_pk($_),
+        columns => $self->{ impl }->table_columns($_),
+    }) for @{ $self->{ impl }->tables };
     $schema .= "1;";
     return $schema;
+}
+
+sub _make_install_table_text {
+    my ($self, $params) = @_;
+    my $table   = $params->{ table };
+    my $pk      = $params->{ pk    };
+    my $columns = join " ", @{ $params->{ columns } };
+
+    return "install_table $table => schema {\n".
+           "    pk '$pk';\n".
+           "    columns qw/$columns/;\n".
+           "};\n\n"
 }
 
 1;
