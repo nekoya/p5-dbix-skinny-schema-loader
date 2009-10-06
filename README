@@ -2,18 +2,10 @@ This is Perl module DBIx::Skinny::Schema::Loader.
 
 INSTALLATION
 
-DBIx::Skinny::Schema::Loader installation is straightforward. If your CPAN shell is set up,
-you should just be able to do
-
-    % cpan DBIx::Skinny::Schema::Loader
-
-Download it, unpack it, then build it as per the usual:
+To install this module, run the following commands:
 
     % perl Makefile.PL
     % make && make test
-
-Then install it:
-
     % make install
 
 DOCUMENTATION
@@ -24,4 +16,4 @@ DBIx::Skinny::Schema::Loader documentation is available as in POD. So you can do
 
 to read the documentation online with your favorite pager.
 
-Default Name
+Ryo Miyake
