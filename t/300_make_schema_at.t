@@ -17,8 +17,8 @@ BEGIN {
 }
 END { Mock::SQLite->clean_test_db }
 
-use DBIx::Skinny::Schema::Loader;
-ok my $schema = DBIx::Skinny::Schema::Loader->make_schema_at(
+use DBIx::Skinny::Schema::Loader qw/make_schema_at/;
+ok my $schema = make_schema_at(
     'Mock::DB::Schema',
     {
     },

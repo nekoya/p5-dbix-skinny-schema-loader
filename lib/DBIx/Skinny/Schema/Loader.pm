@@ -3,6 +3,10 @@ package DBIx::Skinny::Schema::Loader;
 our $VERSION = '0.01';
 
 use Any::Moose;
+extends any_moose('::Object'), 'Exporter';
+
+our @EXPORT_OK = qw(make_schema_at);
+
 has impl => (
     is      => 'rw',
     isa     => 'DBIx::Skinny::Schema::Loader::DBI',
@@ -49,9 +53,9 @@ sub load_schema {
 }
 
 sub make_schema_at {
-    my ($class, $schema_class, $options, $connect_info) = @_;
+    my ($schema_class, $options, $connect_info) = @_;
 
-    my $self = $class->new;
+    my $self = __PACKAGE__->new;
     $self->connect(@{ $connect_info });
 
     my $schema = "package $schema_class;\nuse DBIx::Skinny::Schema;\n\n";

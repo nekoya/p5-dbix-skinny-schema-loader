@@ -17,14 +17,14 @@ BEGIN {
 }
 END { Mock::SQLite->clean_test_db }
 
-use DBIx::Skinny::Schema::Loader;
+use DBIx::Skinny::Schema::Loader qw/make_schema_at/;
 
 my $tmpl = << '...';
 # custom template
 install_utf8_columns qw/jpname title content/;
 ...
 
-ok my $schema = DBIx::Skinny::Schema::Loader->make_schema_at(
+ok my $schema = make_schema_at(
     'Mock::DB::Schema',
     {
         template => $tmpl,
