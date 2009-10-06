@@ -57,6 +57,10 @@ sub make_schema_at {
     $self->connect(@{ $connect_info });
 
     my $schema = "package $schema_class;\nuse DBIx::Skinny::Schema;\n\n";
+    if ( my $template = $options->{ template } ) {
+        chomp $template;
+        $schema .= $template . "\n\n";
+    }
     my $renderer = build_mt(
         "install_table <?= \$_[0] ?> => schema {\n".
         "    pk '<?= \$_[1] ?>';\n".
