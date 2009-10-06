@@ -12,6 +12,7 @@ __PACKAGE__->meta->make_immutable;
 
 use Carp;
 use DBI;
+use DBIx::Skinny::Schema;
 use Text::MicroTemplate qw(:all);
 
 sub connect {
@@ -32,9 +33,6 @@ sub connect {
 
 sub load_schema {
     my $class = shift;
-
-    # import on concrete class namespace
-    eval "use DBIx::Skinny::Schema"; ## no critic
 
     (my $skinny_class = caller) =~ s/::Schema//;
     my $self = $class->new;
