@@ -4,20 +4,31 @@ use lib './t';
 use FindBin::libs;
 use Data::Dumper;
 use Perl6::Say;
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Test::Exception;
 
 use DBI;
-use DBIx::Skinny::Schema::Loader;
+use DBIx::Skinny::Schema::Loader::DBI::SQLite;
 use Mock::SQLite;
 
-END   { Mock::SQLite->clean_test_db }
+END { Mock::SQLite->clean_test_db }
 
-ok my $dbh = DBI->connect('dbi:SQLite:test.db', '', ''), 'connected to SQLite';
+my $testdsn  = 'dbi:SQLite:test.db';
+my $testuser = '';
+my $testpass = '';
+
+ok my $dbh = DBI->connect($testdsn, $testuser, $testpass), 'connected to SQLite';
 Mock::SQLite->dbh($dbh);
 Mock::SQLite->setup_test_db;
 
-ok my $loader = DBIx::Skinny::Schema::Loader->new(dbh => $dbh), 'created loader object';
+throws_ok { DBIx::Skinny::Schema::Loader::DBI::SQLite->new({ dsn => '', user => '', pass => '' }) }
+    qr/^Can't connect to data source/,
+    'failed to connect DB';
+
+ok my $loader = DBIx::Skinny::Schema::Loader::DBI::SQLite->new({
+        dsn => $testdsn, user => $testuser, pass => $testpass
+    }), 'created loader impl object';
+
 is_deeply $loader->tables, [qw/authors books genders prefectures/], 'tables';
 is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
 
@@ -53,5 +64,3 @@ $dbh->do($_) for (
     q{ DROP TABLE composite },
     q{ DROP TABLE no_pk },
 );
-
-print $loader->make_schema_at('MyApp::Schema');

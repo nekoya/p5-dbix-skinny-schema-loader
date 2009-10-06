@@ -1,10 +1,27 @@
 package DBIx::Skinny::Schema::Loader::DBI;
 use Any::Moose;
 
-has dbh => (
+has dsn => (
     is       => 'ro',
-    isa      => 'DBI::db',
+    isa      => 'Str',
     required => 1,
+);
+
+has user => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
+);
+
+has pass => (
+    is       => 'ro',
+    isa      => 'Str',
+    required => 1,
+);
+
+has dbh => (
+    is  => 'rw',
+    isa => 'DBI::db',
 );
 
 has quoter => (
@@ -31,6 +48,11 @@ no Any::Moose;
 __PACKAGE__->meta->make_immutable;
 
 use Carp;
+
+sub BUILD {
+    my $self = shift;
+    $self->dbh(DBI->connect($self->dsn, $self->user, $self->pass));
+}
 
 sub table_columns {
     my ($self, $table) = @_;
