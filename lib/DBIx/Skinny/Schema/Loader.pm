@@ -158,7 +158,7 @@ you can use make_schema_as an imported function.
         # options here
       },
       [ 'dbi:SQLite:test.db', '', '' ]
-  ), 'got schema class file content by make_schema_at';
+  );
 
 $schema_class is schema class name that you want publish.
 
