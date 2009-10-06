@@ -1,7 +1,7 @@
 package DBIx::Skinny::Schema::Loader;
 use base qw/Exporter/;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 our @EXPORT_OK = qw(make_schema_at);
 
 use Carp;
