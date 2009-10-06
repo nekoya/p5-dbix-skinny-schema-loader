@@ -1,4 +1,7 @@
 package DBIx::Skinny::Schema::Loader::DBI;
+use strict;
+use warnings;
+
 
 use Carp;
 

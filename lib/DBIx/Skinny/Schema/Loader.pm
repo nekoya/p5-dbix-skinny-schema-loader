@@ -1,4 +1,7 @@
 package DBIx::Skinny::Schema::Loader;
+use strict;
+use warnings;
+
 use base qw/Exporter/;
 
 our $VERSION = '0.02';
