@@ -2,14 +2,27 @@ package DBIx::Skinny::Schema::Loader;
 use strict;
 use warnings;
 
-use base qw/Exporter/;
-
-our $VERSION = '0.02';
-our @EXPORT_OK = qw(make_schema_at);
+our $VERSION = '0.03';
 
 use Carp;
 use DBI;
 use DBIx::Skinny::Schema;
+
+sub import {
+    my ($class, @args) = @_;
+    my $caller = caller;
+
+    my @functions = qw(
+    make_schema_at
+    );
+
+    for my $func ( @args ) {
+        if ( grep { $func } @functions ) {
+            no strict 'refs';
+            *{"$caller\::$func"} = \&$func;
+        }
+    }
+}
 
 sub new {
     my ($class) = @_;

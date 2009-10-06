@@ -1,4 +1,13 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.03    Tue Oct  6 19:29:16 2009
+        - removed dependency of Exporter
+        - added use strict/warnings to class files
+          (I forgot it when remove Any::Moose,
+           thanks to walf443)
+
+0.02    Tue Oct  6 23:26:26 2009
+        - removed dependency of Any::Moose and Text::MicroTemplate
+
 0.01    Tue Oct  6 19:29:16 2009
         - original version
