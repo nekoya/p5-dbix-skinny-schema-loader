@@ -29,6 +29,7 @@ sub setup_test_db {
         },
         qq{
             CREATE TABLE prefectures (
+                id    int,
                 name  varchar(255) primary key
             )
         }
