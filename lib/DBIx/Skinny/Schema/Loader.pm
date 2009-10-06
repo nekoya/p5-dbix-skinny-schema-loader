@@ -34,11 +34,9 @@ sub load_schema {
 
     (my $skinny_class = caller) =~ s/::Schema//;
     my $self = $class->new;
-    $self->connect(
-        $skinny_class->attribute->{ dsn },
-        $skinny_class->attribute->{ user },
-        $skinny_class->attribute->{ password },
-    );
+    my $attr = $skinny_class->attribute;
+    $self->connect($attr->{ dsn }, $attr->{ user }, $attr->{ password });
+
     my $schema = caller->schema_info;
     for my $table ( @{ $self->{ impl }->tables } ) {
         $schema->{ $table }->{ pk } = $self->{ impl }->table_pk($table);
