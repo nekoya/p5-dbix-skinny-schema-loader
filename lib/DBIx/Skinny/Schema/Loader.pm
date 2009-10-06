@@ -237,7 +237,7 @@ Ryo Miyake E<lt>ryo.studiom {at} gmail.comE<gt>
 
 =head1 SEE ALSO
 
-DBIx::Skinny
+DBIx::Skinny, DBIx::Class::Schema::Loader
 
 =head1 AUTHOR
 
