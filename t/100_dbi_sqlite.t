@@ -25,18 +25,6 @@ throws_ok { DBIx::Skinny::Schema::Loader::DBI::SQLite->new({ dsn => '', user => 
     qr/^Can't connect to data source/,
     'failed to connect DB';
 
-ok my $loader = DBIx::Skinny::Schema::Loader::DBI::SQLite->new({
-        dsn => $testdsn, user => $testuser, pass => $testpass
-    }), 'created loader impl object';
-
-is_deeply $loader->tables, [qw/authors books genders prefectures/], 'tables';
-is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
-
-is $loader->table_pk('authors'), 'id', 'authors pk';
-is $loader->table_pk('books'), 'id', 'books pk';
-is $loader->table_pk('genders'), 'name', 'genders pk';
-is $loader->table_pk('prefectures'), 'name', 'prefectures pk';
-
 $dbh->do($_) for (
     qq{
         CREATE TABLE composite (
@@ -52,6 +40,18 @@ $dbh->do($_) for (
         )
     }
 );
+
+ok my $loader = DBIx::Skinny::Schema::Loader::DBI::SQLite->new({
+        dsn => $testdsn, user => $testuser, pass => $testpass
+    }), 'created loader impl object';
+
+is_deeply $loader->tables, [qw/authors books composite genders no_pk prefectures/], 'tables';
+is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
+
+is $loader->table_pk('authors'), 'id', 'authors pk';
+is $loader->table_pk('books'), 'id', 'books pk';
+is $loader->table_pk('genders'), 'name', 'genders pk';
+is $loader->table_pk('prefectures'), 'name', 'prefectures pk';
 
 throws_ok { $loader->table_pk('composite') }
     qr/^DBIx::Skinny is not support composite primary key/,
