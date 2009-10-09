@@ -4,23 +4,30 @@ use lib './t';
 use FindBin::libs;
 use Data::Dumper;
 use Perl6::Say;
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 
 use DBI;
 use DBIx::Skinny::Schema::Loader::DBI::mysql;
 use Mock::MySQL;
 
+BEGIN {
+  eval "use DBD::mysql";
+  plan skip_all => 'needs DBD::mysql for testing' if $@;
+}
+
 END { Mock::MySQL->clean_test_db }
+
+plan tests => 10;
 
 SKIP : {
     my $testdsn  = $ENV{ SKINNY_MYSQL_DSN  } || 'dbi:mysql:test';
     my $testuser = $ENV{ SKINNY_MYSQL_USER } || '';
     my $testpass = $ENV{ SKINNY_MYSQL_PASS } || '';
 
-    skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test', 11 unless ($testdsn && $testuser);
+    my $dbh = DBI->connect($testdsn, $testuser, $testpass, { RaiseError => 0, PrintError => 0 })
+        or skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test', 10;
 
-    ok my $dbh = DBI->connect($testdsn, $testuser, $testpass), 'connected to MySQL';
     Mock::MySQL->dbh($dbh);
     Mock::MySQL->setup_test_db;
 

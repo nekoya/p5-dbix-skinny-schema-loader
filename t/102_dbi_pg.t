@@ -4,23 +4,30 @@ use lib './t';
 use FindBin::libs;
 use Data::Dumper;
 use Perl6::Say;
-use Test::More tests => 11;
+use Test::More;
 use Test::Exception;
 
 use DBI;
 use DBIx::Skinny::Schema::Loader::DBI::Pg;
 use Mock::Pg;
 
+BEGIN {
+  eval "use DBD::Pg";
+  plan skip_all => 'needs DBD::Pg for testing' if $@;
+}
+
 END { Mock::Pg->clean_test_db }
+
+plan tests => 10;
 
 SKIP: {
     my $testdsn  = $ENV{ SKINNY_PG_DSN  } || 'dbi:Pg:dbname=test';
     my $testuser = $ENV{ SKINNY_PG_USER } || '';
     my $testpass = $ENV{ SKINNY_PG_PASS } || '';
 
-    skip 'Set $ENV{SKINNY_PG_DSN}, _USER and _PASS to run this test', 11 unless ($testdsn && $testuser);
+    my $dbh = DBI->connect($testdsn, $testuser, $testpass, { RaiseError => 0, PrintError => 0 })
+        or skip 'Set $ENV{SKINNY_PG_DSN}, _USER and _PASS to run this test', 10;
 
-    ok my $dbh = DBI->connect($testdsn, $testuser, $testpass), 'connected to Pg';
     Mock::Pg->dbh($dbh);
     Mock::Pg->setup_test_db;
 
