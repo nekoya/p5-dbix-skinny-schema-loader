@@ -29,12 +29,20 @@ sub new {
     bless {}, $class;
 }
 
+sub supported_drivers {
+    qw(
+        SQLite
+        mysql
+        Pg
+    );
+}
+
 sub connect {
     my ($self, $dsn, $user, $pass) = @_;
     $dsn =~ /^dbi:([^:]+):/;
     my $driver = $1 or croak "Could not parse DSN";
     croak "$driver is not supported by DBIx::Skinny::Schema::Loader yet"
-        unless $driver =~ /^(SQLite|mysql)$/;
+        unless grep { /^$driver$/ } $self->supported_drivers;
     my $impl = __PACKAGE__ . "::DBI::$driver";
     eval "use $impl"; ## no critic
     die $@ if $@;
