@@ -4,10 +4,11 @@ use lib './t';
 use FindBin::libs;
 use Data::Dumper;
 use Perl6::Say;
-use Test::More tests => 11;
+use Test::More tests => 13;
 use Test::Exception;
 
 use DBI;
+use DBIx::Skinny::Schema::Loader;
 use DBIx::Skinny::Schema::Loader::DBI::SQLite;
 use Mock::SQLite;
 
@@ -64,3 +65,7 @@ $dbh->do($_) for (
     q{ DROP TABLE composite },
     q{ DROP TABLE no_pk },
 );
+
+my $schema = DBIx::Skinny::Schema::Loader->new;
+ok $schema->connect($testdsn, $testuser, $testpass), 'connected loader';
+isa_ok $schema->{ impl }, 'DBIx::Skinny::Schema::Loader::DBI::SQLite';

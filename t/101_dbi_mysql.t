@@ -8,6 +8,7 @@ use Test::More;
 use Test::Exception;
 
 use DBI;
+use DBIx::Skinny::Schema::Loader;
 use DBIx::Skinny::Schema::Loader::DBI::mysql;
 use Mock::MySQL;
 
@@ -18,7 +19,7 @@ BEGIN {
 
 END { Mock::MySQL->clean_test_db }
 
-plan tests => 10;
+plan tests => 12;
 
 SKIP : {
     my $testdsn  = $ENV{ SKINNY_MYSQL_DSN  } || 'dbi:mysql:test';
@@ -73,4 +74,8 @@ SKIP : {
         q{ DROP TABLE composite },
         q{ DROP TABLE no_pk },
     );
+
+    my $schema = DBIx::Skinny::Schema::Loader->new;
+    ok $schema->connect($testdsn, $testuser, $testpass), 'connected loader';
+    isa_ok $schema->{ impl }, 'DBIx::Skinny::Schema::Loader::DBI::mysql';
 }
