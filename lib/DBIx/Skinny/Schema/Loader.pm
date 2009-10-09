@@ -54,14 +54,17 @@ sub connect {
 }
 
 sub load_schema {
-    my $class = shift;
+    my ($class, $dsn) = @_;
 
-    (my $skinny_class = caller) =~ s/::Schema//;
+    (my $skinny_class = $class) =~ s/::Schema//;
     my $self = $class->new;
-    my $attr = $skinny_class->attribute;
-    $self->connect($attr->{ dsn }, $attr->{ user }, $attr->{ password });
+    unless ( $dsn ) {
+        my $attr = $skinny_class->attribute;
+        $dsn->{ $_ } = $attr->{ $_ } for qw/dsn user password/;
+    }
+    $self->connect($dsn->{ dsn }, $dsn->{ user }, $dsn->{ password });
 
-    my $schema = caller->schema_info;
+    my $schema = $class->schema_info;
     for my $table ( @{ $self->{ impl }->tables } ) {
         $schema->{ $table }->{ pk } = $self->{ impl }->table_pk($table);
         $schema->{ $table }->{ columns } = $self->{ impl }->table_columns($table);
