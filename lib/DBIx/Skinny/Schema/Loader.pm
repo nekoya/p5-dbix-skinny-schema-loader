@@ -2,7 +2,7 @@ package DBIx::Skinny::Schema::Loader;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use Carp;
 use DBI;
@@ -82,25 +82,33 @@ sub make_schema_at {
         chomp $template;
         $schema .= $template . "\n\n";
     }
-    $schema .= $self->_make_install_table_text({
-        table   => $_,
-        pk      => $self->{ impl }->table_pk($_),
-        columns => $self->{ impl }->table_columns($_),
-    }) for @{ $self->{ impl }->tables };
+    $schema .= $self->_make_install_table_text(
+        {
+            table   => $_,
+            pk      => $self->{ impl }->table_pk($_),
+            columns => $self->{ impl }->table_columns($_),
+        },
+        $options->{ table_template }
+    ) for @{ $self->{ impl }->tables };
     $schema .= "1;";
     return $schema;
 }
 
 sub _make_install_table_text {
-    my ($self, $params) = @_;
+    my ($self, $params, $template) = @_;
     my $table   = $params->{ table };
     my $pk      = $params->{ pk    };
     my $columns = join " ", @{ $params->{ columns } };
+    $template ||=
+           "install_table [% table %] => schema {\n".
+           "    pk '[% pk %]';\n".
+           "    columns qw/[% columns %]/;\n".
+           "};\n\n";
 
-    return "install_table $table => schema {\n".
-           "    pk '$pk';\n".
-           "    columns qw/$columns/;\n".
-           "};\n\n"
+    $template =~ s/\[% table %\]/$table/g;
+    $template =~ s/\[% pk %\]/$pk/g;
+    $template =~ s/\[% columns %\]/$columns/g;
+    return $template;
 }
 
 1;
@@ -240,7 +248,9 @@ Don't worry, DBIx::Skinny allows call install_table twice or more.
 insert your custom template.
 
   my $tmpl = << '...';
+  # custom template
   install_utf8_columns qw/title content/;
+  ...
 
   install_table books => schema {
     trigger pre_insert => sub {
@@ -257,6 +267,42 @@ insert your custom template.
       },
       [ 'dbi:SQLite:test.db', '', '' ]
   );
+
+then you get content inserted your template before install_table block.
+
+=head2 table_template
+
+use your custom template for install_table.
+
+  my $table_template = << '...';
+  install_table [% table %] => schema {
+      pk '[% pk %]';
+      columns qw/[% columns %]/;
+      trigger pre_insert => $created_at;
+  };
+
+  ...
+
+  print make_schema_at(
+      'Your::DB::Schema',
+      {
+          table_template => $table_template,
+      },
+      [ 'dbi:SQLite:test.db', '', '' ]
+  );
+
+your schema's install_table block will be
+
+  install_table books => schema {
+      pk 'id';
+      columns qw/id author_id name/;
+      tritter pre_insert => $created_at;
+  };
+
+make_schema_at replaces some following variables.
+[% table %]   ... table name
+[% pk %]      ... primary key
+[% columns %] ... columns joined by a space
 
 =head1 AUTHOR
 

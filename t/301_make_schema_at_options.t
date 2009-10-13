@@ -22,40 +22,63 @@ use DBIx::Skinny::Schema::Loader qw/make_schema_at/;
 my $tmpl = << '...';
 # custom template
 install_utf8_columns qw/jpname title content/;
+my $created_at = sub {
+    my ($class, $args) = @_;
+    $args->{ created_at } ||= DateTime->now;
+};
+...
+
+my $table_template = << '...';
+install_table [% table %] => schema {
+    pk '[% pk %]';
+    columns qw/[% columns %]/;
+    trigger pre_insert => $created_at;
+};
+
 ...
 
 ok my $schema = make_schema_at(
     'Mock::DB::Schema',
     {
-        template => $tmpl,
+        table_template => $table_template,
+        template       => $tmpl,
     },
     [ 'dbi:SQLite:test.db', '', '' ]
 ), 'got schema class file content by make_schema_at';
+
 is "$schema\n", << '...', 'assert content';
 package Mock::DB::Schema;
 use DBIx::Skinny::Schema;
 
 # custom template
 install_utf8_columns qw/jpname title content/;
+my $created_at = sub {
+    my ($class, $args) = @_;
+    $args->{ created_at } ||= DateTime->now;
+};
 
 install_table authors => schema {
     pk 'id';
     columns qw/id gender_name pref_name name/;
+    trigger pre_insert => $created_at;
 };
 
 install_table books => schema {
     pk 'id';
     columns qw/id author_id name/;
+    trigger pre_insert => $created_at;
 };
 
 install_table genders => schema {
     pk 'name';
     columns qw/name/;
+    trigger pre_insert => $created_at;
 };
 
 install_table prefectures => schema {
     pk 'name';
     columns qw/id name/;
+    trigger pre_insert => $created_at;
 };
 
 1;
