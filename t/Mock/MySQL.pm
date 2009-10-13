@@ -32,7 +32,8 @@ sub setup_test_db {
                 id    int,
                 name  varchar(255) primary key
             )
-        }
+        },
+        q{ INSERT INTO books VALUES (1, 1, 'mysql') },
     );
     $self->dbh->do($_) for @statements;
 }

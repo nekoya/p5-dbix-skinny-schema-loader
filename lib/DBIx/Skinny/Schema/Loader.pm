@@ -307,6 +307,31 @@ make_schema_at replaces some following variables.
 [% pk %]      ... primary key
 [% columns %] ... columns joined by a space
 
+=head1 LAZY SCHEMA LOADING
+
+if you write Your::DB class without setup sentence,
+
+  package MyApp::DB;
+  use DBIx::Skinny;
+  1;
+
+you should not call load_schema in your class file.
+
+  package MyApp::DB::Schema;
+  use base qw/DBIx::Skinny::Schema::Loader/;
+  1;
+
+call load_schema with dsn manually in your app.
+
+  my $db = MyApp::DB->new;
+  my $connect_info = {
+      dsn      => $dsn,
+      username => $user,
+      password => $password,
+  };
+  $db->connect($connect_info);
+  $db->schema->load_schema($connect_info);
+
 =head1 AUTHOR
 
 Ryo Miyake E<lt>ryo.studiom {at} gmail.comE<gt>
