@@ -199,7 +199,7 @@ $options detail in C<options of make_schema_st> section.
 
 $connect_info is arrayref of dsn, username, password to connect DB.
 
-=head1 how loader find primary keys
+=head1 HOW LOADER FIND PRIMARY KEYS
 
 surely primary key defined at DB, use it as PK.
 
@@ -212,7 +212,7 @@ unless found PK yet, Loader throws exception.
 Loader throws exception when PK is composite key.
 DBIx::Skinny is not support composite primary key.
 
-=head1 additional settings for load_schema
+=head1 ADDITIONAL SETTINGS FOR load_schema
 
 if you want to use additional settings, write like it
 
@@ -241,7 +241,7 @@ because 'require DBIx::Skinny::Schema' was done by Schema::Loader.
 You may worry call install_table without pk and columns doesn't work.
 Don't worry, DBIx::Skinny allows call install_table twice or more.
 
-=head1 options of make_schema_st
+=head1 OPTIONS OF make_schema_st
 
 =head2 template
 
