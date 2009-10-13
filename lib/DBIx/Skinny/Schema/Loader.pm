@@ -72,6 +72,7 @@ sub load_schema {
         $schema->{ $table }->{ pk } = $self->{ impl }->table_pk($table);
         $schema->{ $table }->{ columns } = $self->{ impl }->table_columns($table);
     }
+    return $self;
 }
 
 sub make_schema_at {
