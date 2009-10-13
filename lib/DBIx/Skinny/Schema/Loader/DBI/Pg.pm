@@ -1,4 +1,7 @@
 package DBIx::Skinny::Schema::Loader::DBI::Pg;
+use strict;
+use warnings;
+
 use base qw/DBIx::Skinny::Schema::Loader::DBI/;
 
 sub tables {
