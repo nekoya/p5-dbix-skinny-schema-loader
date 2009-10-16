@@ -2,8 +2,6 @@ use strict;
 use warnings;
 use lib './t';
 use FindBin::libs;
-use Data::Dumper;
-use Perl6::Say;
 use Test::More tests => 4;
 use Test::Exception;
 
