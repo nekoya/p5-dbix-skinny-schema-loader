@@ -99,7 +99,7 @@ sub make_schema_at {
 
 sub _insert_template {
     my ($self, $template) = @_;
-    return unless $template;
+    return '' unless $template;
     chomp $template;
     return $template . "\n\n";
 }
