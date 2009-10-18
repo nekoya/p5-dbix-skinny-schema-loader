@@ -17,9 +17,10 @@ END { Mock::SQLite->clean_test_db }
 
 use DBIx::Skinny::Schema::Loader qw/make_schema_at/;
 
-my $tmpl = << '...';
-# custom template
-install_utf8_columns qw/jpname title content/;
+my $before = '# custom template';
+my $tmpl = 'install_utf8_columns qw/jpname title content/;';
+
+my $after = << '...';
 my $created_at = sub {
     my ($class, $args) = @_;
     $args->{ created_at } ||= DateTime->now;
@@ -38,8 +39,10 @@ install_table [% table %] => schema {
 ok my $schema = make_schema_at(
     'Mock::DB::Schema',
     {
-        table_template => $table_template,
-        template       => $tmpl,
+        table_template  => $table_template,
+        template        => $tmpl, # deplicated, use before_template
+        before_template => $before,
+        after_template  => $after,
     },
     [ 'dbi:SQLite:test.db', '', '' ]
 ), 'got schema class file content by make_schema_at';
@@ -49,11 +52,8 @@ package Mock::DB::Schema;
 use DBIx::Skinny::Schema;
 
 # custom template
+
 install_utf8_columns qw/jpname title content/;
-my $created_at = sub {
-    my ($class, $args) = @_;
-    $args->{ created_at } ||= DateTime->now;
-};
 
 install_table authors => schema {
     pk 'id';
@@ -77,6 +77,11 @@ install_table prefectures => schema {
     pk 'name';
     columns qw/id name/;
     trigger pre_insert => $created_at;
+};
+
+my $created_at = sub {
+    my ($class, $args) = @_;
+    $args->{ created_at } ||= DateTime->now;
 };
 
 1;

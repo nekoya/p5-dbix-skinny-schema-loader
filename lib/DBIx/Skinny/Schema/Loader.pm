@@ -82,10 +82,8 @@ sub make_schema_at {
     $self->connect(@{ $connect_info });
 
     my $schema = "package $schema_class;\nuse DBIx::Skinny::Schema;\n\n";
-    if ( my $template = $options->{ template } ) {
-        chomp $template;
-        $schema .= $template . "\n\n";
-    }
+    $schema .= $self->_insert_template($options->{ before_template });
+    $schema .= $self->_insert_template($options->{ template });
     $schema .= $self->_make_install_table_text(
         {
             table   => $_,
@@ -94,8 +92,16 @@ sub make_schema_at {
         },
         $options->{ table_template }
     ) for @{ $self->{ impl }->tables };
+    $schema .= $self->_insert_template($options->{ after_template });
     $schema .= "1;";
     return $schema;
+}
+
+sub _insert_template {
+    my ($self, $template) = @_;
+    return unless $template;
+    chomp $template;
+    return $template . "\n\n";
 }
 
 sub _make_install_table_text {
@@ -247,9 +253,9 @@ Don't worry, DBIx::Skinny allows call install_table twice or more.
 
 =head1 OPTIONS OF make_schema_st
 
-=head2 template
+=head2 before_template
 
-insert your custom template.
+insert your custom template before install_table block.
 
   my $tmpl = << '...';
   # custom template
@@ -267,12 +273,34 @@ insert your custom template.
   print make_schema_at(
       'Your::DB::Schema',
       {
-          template => $tmpl,
+          before_template => $tmpl,
       },
       [ 'dbi:SQLite:test.db', '', '' ]
   );
 
 then you get content inserted your template before install_table block.
+
+=head2 after_template
+
+after_template works like before_template mostly.
+after_template inserts template after install_table block.
+
+  print make_schema_at(
+      'Your::DB::Schema',
+      {
+          before_template => $before,
+          after_template  => $after,
+      },
+      [ 'dbi:SQLite:test.db', '', '' ]
+  );
+
+you can use both before_template and after_template all together.
+
+=head2 template
+
+DEPLICATED. this option is provided for backward compatibility.
+
+you can use before_template instead of this.
 
 =head2 table_template
 
