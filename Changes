@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.06    Sun Oct 18 16:52:44 2009
+        - added make_schema_at options
+          - before_template (alternative of template option)
+          - after_template
+
 0.05    Tue Oct 13 12:10:47 2009
         - added table_template option for make_schema_at
 
