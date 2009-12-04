@@ -8,7 +8,7 @@ requires 'DBIx::Skinny';
 requires 'DBIx::Skinny::Schema';
 
 tests 't/*.t';
-author_tests 'xt';
+author_tests('xt');
 
 build_requires 'Test::More';
 use_test_base;
