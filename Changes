@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.07    Fri Dec  4 12:08:40 2009
+        - separated get_skinny_connect_info method
+          - fixed bug, username didn't fetched
+
 0.06    Sun Oct 18 16:52:44 2009
         - added make_schema_at options
           - before_template (alternative of template option)
