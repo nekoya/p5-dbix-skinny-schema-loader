@@ -2,7 +2,7 @@ package DBIx::Skinny::Schema::Loader;
 use strict;
 use warnings;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use Carp;
 use DBI;
@@ -65,7 +65,8 @@ sub load_schema {
 
     my $schema = $class->schema_info;
     for my $table ( @{ $self->{ impl }->tables } ) {
-        $schema->{ $table }->{ pk } = $self->{ impl }->table_pk($table);
+        my $pk = $self->{ impl }->table_pk($table);
+        $schema->{ $table }->{ pk } = $pk if $pk;
         $schema->{ $table }->{ columns } = $self->{ impl }->table_columns($table);
     }
     return $self;
@@ -224,8 +225,9 @@ in case of primary key is not defined at DB, Loader find PK following logic.
 
 unless found PK yet, Loader throws exception.
 
-Loader throws exception when PK is composite key.
 DBIx::Skinny is not support composite primary key.
+When PK is composite key, load_schema does not set pk,
+make_schema_at publish "pk ''". You should set pk manually.
 
 =head1 ADDITIONAL SETTINGS FOR load_schema
 

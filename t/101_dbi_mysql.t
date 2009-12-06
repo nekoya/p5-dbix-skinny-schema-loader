@@ -61,9 +61,7 @@ SKIP : {
         }
     );
 
-    throws_ok { $loader->table_pk('composite') }
-        qr/^DBIx::Skinny is not support composite primary key/,
-        'caught exception for composite pk';
+    is $loader->table_pk('composite'), '', 'skip composite pk';
     throws_ok { $loader->table_pk('no_pk') }
         qr/^Could not find primary key/,
         'caught exception pk not found';

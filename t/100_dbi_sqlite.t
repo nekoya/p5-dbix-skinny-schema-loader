@@ -52,9 +52,7 @@ is $loader->table_pk('books'), 'id', 'books pk';
 is $loader->table_pk('genders'), 'name', 'genders pk';
 is $loader->table_pk('prefectures'), 'name', 'prefectures pk';
 
-throws_ok { $loader->table_pk('composite') }
-    qr/^DBIx::Skinny is not support composite primary key/,
-    'caught exception for sonposite pk';
+is $loader->table_pk('composite'), '', 'skip composite pk';
 throws_ok { $loader->table_pk('no_pk') }
     qr/^Could not find primary key/,
     'caught exception pk not found';
