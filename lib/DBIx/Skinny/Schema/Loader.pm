@@ -378,7 +378,7 @@ DBIx::Skinny, DBIx::Class::Schema::Loader
 
 =head1 AUTHOR
 
-Ryo Miyake  C<< <ryo.studiom@gmail.com> >>
+Ryo Miyake  C<< <ryo.studiom __at__ gmail.com> >>
 
 =head1 LICENSE
 
