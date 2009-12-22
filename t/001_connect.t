@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 use lib './t';
-use FindBin::libs;
 use Test::More tests => 5;
 use Test::Exception;
 

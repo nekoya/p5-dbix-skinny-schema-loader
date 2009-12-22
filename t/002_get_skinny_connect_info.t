@@ -1,9 +1,7 @@
 use strict;
 use warnings;
 use lib './t';
-use FindBin::libs;
 use Test::More tests => 1;
-use Test::Exception;
 
 use Mock::MySQLDummy;
 

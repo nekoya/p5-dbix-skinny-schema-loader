@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.09    Wed Dec 23 02:18:58 2009
+        - unnecessary module using removed from test files
+        - added build_require "Test::Exception"
+
 0.08    Mon Dec  7 01:05:14 2009
         - skip pk setting when found composite pk
           - write pk in install_table manually
