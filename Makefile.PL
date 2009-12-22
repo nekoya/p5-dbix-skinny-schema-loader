@@ -4,7 +4,7 @@ all_from 'lib/DBIx/Skinny/Schema/Loader.pm';
 
 requires 'Exporter';
 requires 'DBI';
-requires 'DBIx::Skinny';
+requires 'DBIx::Skinny' => '0.05';
 requires 'DBIx::Skinny::Schema';
 
 author_tests('xt');
