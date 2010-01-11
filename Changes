@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.10    Mon Jan 11 15:49:29 2010
+        - fixed Makefile.PL problem
+
 0.09    Wed Dec 23 02:18:58 2009
         - unnecessary module using removed from test files
         - added build_require "Test::Exception"
