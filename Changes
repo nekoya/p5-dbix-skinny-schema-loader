@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.11    Wed Mar 17 08:17:14 2010
+        - fixed error dynamic loading with Skinny(>=0.06), requires Skinny(>=0.0704)
+        - fixed wrong test count on t/102_dbi_pg.t
+
 0.10    Mon Jan 11 15:49:29 2010
         - fixed Makefile.PL problem
 
