@@ -24,7 +24,7 @@ SKIP: {
     my $testpass = $ENV{ SKINNY_PG_PASS } || '';
 
     my $dbh = DBI->connect($testdsn, $testuser, $testpass, { RaiseError => 0, PrintError => 0 })
-        or skip 'Set $ENV{SKINNY_PG_DSN}, _USER and _PASS to run this test', 10;
+        or skip 'Set $ENV{SKINNY_PG_DSN}, _USER and _PASS to run this test', 12;
 
     Mock::Pg->dbh($dbh);
     Mock::Pg->setup_test_db;
