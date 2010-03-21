@@ -25,25 +25,19 @@ END { Mock::SQLite->clean_test_db }
 }
 
 SKIP : {
-    eval "use DBD::mysql";
-    skip 'needs DBD::mysql for testing', 2 if $@;
-
     note "test MySQL";
-    my $testdsn  = $ENV{ SKINNY_MYSQL_DSN  } || 'dbi:mysql:test';
-    my $testuser = $ENV{ SKINNY_MYSQL_USER } || '';
-    my $testpass = $ENV{ SKINNY_MYSQL_PASS } || '';
 
-    my $dbh = DBI->connect($testdsn, $testuser, $testpass, { RaiseError => 0, PrintError => 0 })
-        or skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test', 2;
+    my ($dsn, $username, $password) = @ENV{map { "SKINNY_MYSQL_${_}" } qw/DSN USER PASS/};
+    skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test' unless ($dsn && $username);
 
-    Mock::MySQL->dbh($dbh);
+    Mock::MySQL->connect({dsn => $dsn, username => $username, password => $password});
     Mock::MySQL->setup_test_db;
 
     ok my $db = Mock::NoSetup->new, 'created Skinny object';
     my $connect_info = {
-        dsn      => $testdsn,
-        username => $testuser,
-        password => $testpass,
+        dsn      => $dsn,
+        username => $username,
+        password => $password,
     };
     $db->connect($connect_info);
     $db->schema->load_schema($connect_info);

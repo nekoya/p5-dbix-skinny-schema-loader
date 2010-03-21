@@ -9,68 +9,55 @@ use DBIx::Skinny::Schema::Loader;
 use DBIx::Skinny::Schema::Loader::DBI::mysql;
 use Mock::MySQL;
 
-BEGIN {
-  eval "use DBD::mysql";
-  plan skip_all => 'needs DBD::mysql for testing' if $@;
-}
+my ($dsn, $username, $password) = @ENV{map { "SKINNY_MYSQL_${_}" } qw/DSN USER PASS/};
+plan skip_all => 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test' unless ($dsn && $username);
 
-END { Mock::MySQL->clean_test_db }
+Mock::MySQL->connect({dsn => $dsn, username => $username, password => $password});
+Mock::MySQL->setup_test_db;
 
-plan tests => 12;
+throws_ok { DBIx::Skinny::Schema::Loader::DBI::mysql->new({ dsn => '', user => '', pass => '' }) }
+qr/^Can't connect to data source/,
+'failed to connect DB';
 
-SKIP : {
-    my $testdsn  = $ENV{ SKINNY_MYSQL_DSN  } || 'dbi:mysql:test';
-    my $testuser = $ENV{ SKINNY_MYSQL_USER } || '';
-    my $testpass = $ENV{ SKINNY_MYSQL_PASS } || '';
+ok my $loader = DBIx::Skinny::Schema::Loader::DBI::mysql->new({
+    dsn => $dsn, user => $username, pass => $password
+}), 'created loader object';
+is_deeply $loader->tables, [qw/authors books genders prefectures/], 'tables';
+is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
 
-    my $dbh = DBI->connect($testdsn, $testuser, $testpass, { RaiseError => 0, PrintError => 0 })
-        or skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test', 12;
+is $loader->table_pk('authors'), 'id', 'authors pk';
+is $loader->table_pk('books'), 'id', 'books pk';
+is $loader->table_pk('genders'), 'name', 'genders pk';
+is $loader->table_pk('prefectures'), 'name', 'prefectures pk';
 
-    Mock::MySQL->dbh($dbh);
-    Mock::MySQL->setup_test_db;
+Mock::MySQL->do($_) for (
+    q{
+    CREATE TABLE composite (
+        id   int,
+        name varchar(255),
+        primary key (id, name)
+    ) },
+    q{
+    CREATE TABLE no_pk (
+        code int,
+        name varchar(255)
+    ) },
+);
 
-    throws_ok { DBIx::Skinny::Schema::Loader::DBI::mysql->new({ dsn => '', user => '', pass => '' }) }
-        qr/^Can't connect to data source/,
-        'failed to connect DB';
+is $loader->table_pk('composite'), '', 'skip composite pk';
+throws_ok { $loader->table_pk('no_pk') }
+qr/^Could not find primary key/,
+'caught exception pk not found';
 
-    ok my $loader = DBIx::Skinny::Schema::Loader::DBI::mysql->new({
-            dsn => $testdsn, user => $testuser, pass => $testpass
-        }), 'created loader object';
-    is_deeply $loader->tables, [qw/authors books genders prefectures/], 'tables';
-    is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
+Mock::MySQL->do($_) for (
+    q{ DROP TABLE composite },
+    q{ DROP TABLE no_pk },
+);
 
-    is $loader->table_pk('authors'), 'id', 'authors pk';
-    is $loader->table_pk('books'), 'id', 'books pk';
-    is $loader->table_pk('genders'), 'name', 'genders pk';
-    is $loader->table_pk('prefectures'), 'name', 'prefectures pk';
+my $schema = DBIx::Skinny::Schema::Loader->new;
+ok $schema->connect($dsn, $username, $password), 'connected loader';
+isa_ok $schema->{ impl }, 'DBIx::Skinny::Schema::Loader::DBI::mysql';
 
-    $dbh->do($_) for (
-        qq{
-            CREATE TABLE composite (
-                id   int,
-                name varchar(255),
-                primary key (id, name)
-            )
-        },
-        qq{
-            CREATE TABLE no_pk (
-                code int,
-                name varchar(255)
-            )
-        }
-    );
+Mock::MySQL->clean_test_db;
 
-    is $loader->table_pk('composite'), '', 'skip composite pk';
-    throws_ok { $loader->table_pk('no_pk') }
-        qr/^Could not find primary key/,
-        'caught exception pk not found';
-
-    $dbh->do($_) for (
-        q{ DROP TABLE composite },
-        q{ DROP TABLE no_pk },
-    );
-
-    my $schema = DBIx::Skinny::Schema::Loader->new;
-    ok $schema->connect($testdsn, $testuser, $testpass), 'connected loader';
-    isa_ok $schema->{ impl }, 'DBIx::Skinny::Schema::Loader::DBI::mysql';
-}
+done_testing;
