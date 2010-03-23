@@ -28,7 +28,7 @@ SKIP : {
     note "test MySQL";
 
     my ($dsn, $username, $password) = @ENV{map { "SKINNY_MYSQL_${_}" } qw/DSN USER PASS/};
-    skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test' unless ($dsn && $username);
+    skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test', 2 unless ($dsn && $username);
 
     Mock::MySQL->connect({dsn => $dsn, username => $username, password => $password});
     Mock::MySQL->setup_test_db;
