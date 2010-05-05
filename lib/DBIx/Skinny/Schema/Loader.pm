@@ -136,7 +136,7 @@ DBIx::Skinny::Schema::Loader - Schema loader for DBIx::Skinny
 
 =head1 SYNOPSIS
 
-dynamic schema loading.
+Runtime schema loading:
 
   package Your::DB::Schema;
   use base qw/DBIx::Skinny::Schema::Loader/;
@@ -145,8 +145,9 @@ dynamic schema loading.
 
   1;
 
-or you can get static content of schema class.
-for example, following source save as "publish_schema.pl"
+Preloaded schema:
+
+Given a the following source code as F<publish_schema.pl>:
 
   use DBIx::Skinny::Schema::Loader qw/make_schema_at/;
   print make_schema_at(
@@ -157,27 +158,32 @@ for example, following source save as "publish_schema.pl"
     [ 'dbi:SQLite:test.db', '', '' ]
   );
 
-and execute
-$ perl publish_schema.pl > Your/DB/Schema.pm
+you can execute
+
+    $ perl publish_schema.pl > Your/DB/Schema.pm
+
+to create a static schema class.
 
 =head1 DESCRIPTION
 
 DBIx::Skinny::Schema::Loader is schema loader for DBIx::Skinny.
-Supported dynamic schema loading and static publish.
+It can dynamically load schemas at runtime or statically publish
+them.
 
-it supports MySQL and SQLite, PostgreSQL is not supported yet.
+It supports MySQL and SQLite, and PostgreSQL.
 
 =head1 METHODS
 
 =head2 connect( $dsn, $user, $pass )
 
-perhaps you don't have to use it manually.
+Probably no need for public use.
 
+Instead, 
 invoke concrete db driver class named "DBIx::Skinny::Schema::Loader::DBI::XXXX".
 
 =head2 load_schema
 
-loading schema dynamically.
+Dynamically load the schema
 
   package Your::DB::Schema;
   use base qw/DBIx::Skinny::Schema::Loader/;
@@ -186,19 +192,19 @@ loading schema dynamically.
 
   1;
 
-load_schema refer to connect info in your Skinny class.
-when your schema class named "Your::DB::Schema",
-Loader considers "Your::DB" as Skinny class.
+C<load_schema> refers to C<connect info> in your Skinny class.
+When your schema class is named C<Your::DB::Schema>,
+Loader considers C<Your::DB> as a Skinny class.
 
-load_schema execute install_table for all tables.
-set pk and columns automatically.
+C<load_schema> executes C<install_table> for all tables, automatically
+setting primary key and columns.
 
-see also C<how loader find primary keys>, C<additional settings for load_schema> section.
+Also the sections C<how loader find primary keys> and 
+C<additional settings for load_schema>.
 
 =head2 make_schema_at( $schema_class, $options, $connect_info )
 
-return schema file content.
-you can use make_schema_as an imported function.
+Return schema file content as a string. This function is exportable.
 
   use DBIx::Skinny::Schema::Loader qw/make_schema_at/;
   print make_schema_at(
@@ -209,13 +215,14 @@ you can use make_schema_as an imported function.
       [ 'dbi:SQLite:test.db', '', '' ]
   );
 
-$schema_class is schema class name that you want publish.
+C<$schema_class> is schema class name that you want publish.
 
-$options detail in C<options of make_schema_st> section.
+C<$options> are described in the C<options of make_schema_at> section.
 
-$connect_info is arrayref of dsn, username, password to connect DB.
+C<$connect_info> is an arrayref of dsn, username, password to connect to the
+database.
 
-=head1 HOW LOADER FIND PRIMARY KEYS
+=head1 HOW LOADER FINDS PRIMARY KEYS
 
 surely primary key defined at DB, use it as PK.
 
@@ -231,7 +238,7 @@ make_schema_at publish "pk ''". You should set pk manually.
 
 =head1 ADDITIONAL SETTINGS FOR load_schema
 
-if you want to use additional settings, write like it
+Here is how to use additional settings:
 
   package Your::DB::Schema;
   use base qw/DBIx::Skinny::Schema::Loader/;
@@ -255,10 +262,11 @@ if you want to use additional settings, write like it
 you can write instead of it, 'BEGIN { DBIx::Skinny::Schema->import }'
 because 'require DBIx::Skinny::Schema' was done by Schema::Loader.
 
-You may worry call install_table without pk and columns doesn't work.
-Don't worry, DBIx::Skinny allows call install_table twice or more.
+You might be concerned that calling install_table 
+without pk and columns doesn't work. However, 
+DBIx::Skinny allows C<install_table> to be called twice or more.
 
-=head1 OPTIONS OF make_schema_st
+=head1 OPTIONS OF make_schema_at
 
 =head2 before_template
 
@@ -305,7 +313,7 @@ you can use both before_template and after_template all together.
 
 =head2 template
 
-DEPLICATED. this option is provided for backward compatibility.
+DEPRECATED. this option is provided for backward compatibility.
 
 you can use before_template instead of this.
 
@@ -338,7 +346,7 @@ your schema's install_table block will be
       tritter pre_insert => $created_at;
   };
 
-make_schema_at replaces some following variables.
+C<make_schema_at> replaces some following variables.
 [% table %]   ... table name
 [% pk %]      ... primary key
 [% columns %] ... columns joined by a space
@@ -351,7 +359,7 @@ if you write Your::DB class without setup sentence,
   use DBIx::Skinny;
   1;
 
-you should not call load_schema in your class file.
+you should not call C<load_schema> in your class file.
 
   package MyApp::DB::Schema;
   use base qw/DBIx::Skinny::Schema::Loader/;
@@ -374,7 +382,7 @@ Ryo Miyake E<lt>ryo.studiom {at} gmail.comE<gt>
 
 =head1 SEE ALSO
 
-DBIx::Skinny, DBIx::Class::Schema::Loader
+L<DBIx::Skinny>, L<DBIx::Class::Schema::Loader>
 
 =head1 AUTHOR
 
