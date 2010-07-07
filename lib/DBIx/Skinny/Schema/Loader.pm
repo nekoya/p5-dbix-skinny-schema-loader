@@ -38,7 +38,7 @@ sub supported_drivers {
 }
 
 sub connect {
-    my ($self, $dsn, $user, $pass) = @_;
+    my ($self, $dsn, $user, $pass, $connect_options) = @_;
     $dsn =~ /^dbi:([^:]+):/;
     my $driver = $1 or croak "Could not parse DSN";
     croak "$driver is not supported by DBIx::Skinny::Schema::Loader yet"
@@ -50,6 +50,7 @@ sub connect {
         dsn  => $dsn  || '',
         user => $user || '',
         pass => $pass || '',
+        connect_options => $connect_options || {},
     });
 }
 
@@ -61,6 +62,7 @@ sub load_schema {
         $connect_info->{ dsn },
         $connect_info->{ username },
         $connect_info->{ password },
+        $connect_info->{ connect_options },
     );
 
     my $schema = $class->schema_info;
@@ -77,7 +79,7 @@ sub get_skinny_connect_info {
     $class = ref $class || $class;
     (my $skinny_class = $class) =~ s/::Schema//;
     my $attr = $skinny_class->attribute;
-    $connect_info->{ $_ } = $attr->{ $_ } for qw/dsn username password/;
+    $connect_info->{ $_ } = $attr->{ $_ } for qw/dsn username password connect_options/;
     return $connect_info;
 }
 
@@ -174,7 +176,7 @@ It supports MySQL and SQLite, and PostgreSQL.
 
 =head1 METHODS
 
-=head2 connect( $dsn, $user, $pass )
+=head2 connect( $dsn, $user, $pass, $connect_options )
 
 Probably no need for public use.
 
