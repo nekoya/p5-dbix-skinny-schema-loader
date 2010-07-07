@@ -25,22 +25,22 @@ package Mock::DB::Schema;
 use DBIx::Skinny::Schema;
 
 install_table authors => schema {
-    pk 'id';
+    pk qw/id/;
     columns qw/id gender_name pref_name name/;
 };
 
 install_table books => schema {
-    pk 'id';
+    pk qw/id/;
     columns qw/id author_id name/;
 };
 
 install_table genders => schema {
-    pk 'name';
+    pk qw/name/;
     columns qw/name/;
 };
 
 install_table prefectures => schema {
-    pk 'name';
+    pk qw/name/;
     columns qw/id name/;
 };
 

@@ -113,11 +113,11 @@ sub _insert_template {
 sub _make_install_table_text {
     my ($self, $params, $template) = @_;
     my $table   = $params->{ table };
-    my $pk      = $params->{ pk    };
+    my $pk      = join " ", @{ $params->{ pk    }   };
     my $columns = join " ", @{ $params->{ columns } };
     $template ||=
            "install_table [% table %] => schema {\n".
-           "    pk '[% pk %]';\n".
+           "    pk qw/[% pk %]/;\n".
            "    columns qw/[% columns %]/;\n".
            "};\n\n";
 
@@ -232,10 +232,6 @@ in case of primary key is not defined at DB, Loader find PK following logic.
 
 unless found PK yet, Loader throws exception.
 
-DBIx::Skinny is not support composite primary key.
-When PK is composite key, load_schema does not set pk,
-make_schema_at publish "pk ''". You should set pk manually.
-
 =head1 ADDITIONAL SETTINGS FOR load_schema
 
 Here is how to use additional settings:
@@ -323,7 +319,7 @@ use your custom template for install_table.
 
   my $table_template = << '...';
   install_table [% table %] => schema {
-      pk '[% pk %]';
+      pk qw/[% pk %]/;
       columns qw/[% columns %]/;
       trigger pre_insert => $created_at;
   };
@@ -348,7 +344,7 @@ your schema's install_table block will be
 
 C<make_schema_at> replaces some following variables.
 [% table %]   ... table name
-[% pk %]      ... primary key
+[% pk %]      ... primary keys joined by a space
 [% columns %] ... columns joined by a space
 
 =head1 LAZY SCHEMA LOADING

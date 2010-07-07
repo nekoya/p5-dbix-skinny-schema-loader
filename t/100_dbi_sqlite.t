@@ -46,12 +46,12 @@ ok my $loader = DBIx::Skinny::Schema::Loader::DBI::SQLite->new({
 is_deeply $loader->tables, [qw/authors books composite genders no_pk prefectures/], 'tables';
 is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
 
-is $loader->table_pk('authors'), 'id', 'authors pk';
-is $loader->table_pk('books'), 'id', 'books pk';
-is $loader->table_pk('genders'), 'name', 'genders pk';
-is $loader->table_pk('prefectures'), 'name', 'prefectures pk';
+is_deeply $loader->table_pk('authors'), ['id'], 'authors pk';
+is_deeply $loader->table_pk('books'), ['id'], 'books pk';
+is_deeply $loader->table_pk('genders'), ['name'], 'genders pk';
+is_deeply $loader->table_pk('prefectures'), ['name'], 'prefectures pk';
 
-is $loader->table_pk('composite'), '', 'skip composite pk';
+is_deeply $loader->table_pk('composite'), [qw/id name/], 'skip composite pk';
 throws_ok { $loader->table_pk('no_pk') }
     qr/^Could not find primary key/,
     'caught exception pk not found';
