@@ -10,4 +10,5 @@ is_deeply $loader->get_skinny_connect_info, {
     dsn => 'dbi:mysql:testdatabase',
     username => 'user',
     password => 'passwd',
+    connect_options => undef,
 }, 'fetch connect_info from Skinny class'

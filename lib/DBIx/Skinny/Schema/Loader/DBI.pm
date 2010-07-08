@@ -12,8 +12,8 @@ sub new {
         croak "$_ is required" unless defined $fields->{ $_ }
     }
 
-    my $self = bless {%$fields}, $class;
-    $self->{ dbh } = DBI->connect($self->{ dsn }, $self->{ user }, $self->{ pass });
+    my $self = bless {connect_options => {}, %$fields}, $class;
+    $self->{ dbh } = DBI->connect($self->{ dsn }, $self->{ user }, $self->{ pass }, $self->{connect_options});
     return $self;
 }
 
