@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use lib './t';
-use Test::More tests => 5;
+use Test::More tests => 7;
 use Test::Exception;
 
 use DBIx::Skinny::Schema::Loader;
@@ -17,3 +17,7 @@ throws_ok { $loader->connect('dbi:Oracle:test', '', '') }
 
 ok $loader->connect('dbi:SQLite:test.db', '', ''), 'connect succeeded';
 ok unlink('./test.db'), 'deleted test DB';
+
+ok $loader->connect(+{ dsn => 'dbi:SQLite:test.db', user => '', pass =>'' }), 'connect succeeded(hashref style)';
+ok unlink('./test.db'), 'deleted test DB';
+

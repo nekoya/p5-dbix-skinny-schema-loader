@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use lib './t';
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use DBI;
 use Mock::SQLite;
@@ -46,3 +46,11 @@ install_table prefectures => schema {
 
 1;
 ...
+
+ok make_schema_at(
+    'Mock::DB::Schema',
+    {
+    },
+    { dsn => 'dbi:SQLite:test.db', username => '', password => '' }
+), 'got schema class file content by make_schema_at(hashref style connect options)';
+
