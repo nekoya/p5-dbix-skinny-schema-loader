@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.14    Thu Sep 17 09:44:06 2010
+        - make_schema_at and ->connect() takes DBIx::Skinny style connection parameters. (thanks tokuhirom)
+
 0.13    Thu Jul  8 11:52:53 2010
         - English grammar fixes (thanks metaperl)
         - added composite primary key supprot (thanks tokuhirom)
