@@ -150,7 +150,7 @@ DBIx::Skinny::Schema::Loader - Schema loader for DBIx::Skinny
 
 =head1 SYNOPSIS
 
-Runtime schema loading:
+Run-time schema loading:
 
   package Your::DB::Schema;
   use base qw/DBIx::Skinny::Schema::Loader/;
@@ -181,7 +181,7 @@ to create a static schema class.
 =head1 DESCRIPTION
 
 DBIx::Skinny::Schema::Loader is schema loader for DBIx::Skinny.
-It can dynamically load schemas at runtime or statically publish
+It can dynamically load schema at run-time or statically publish
 them.
 
 It supports MySQL and SQLite, and PostgreSQL.

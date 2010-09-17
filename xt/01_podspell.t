@@ -13,4 +13,3 @@ PostgreSQL
 SQLite
 dsn
 username
-deplicated
