@@ -30,15 +30,8 @@ is_deeply $loader->table_pk('books'), ['id'], 'books pk';
 is_deeply $loader->table_pk('genders'), ['name'], 'genders pk';
 is_deeply $loader->table_pk('prefectures'), ['name'], 'prefectures pk';
 
-is_deeply $loader->table_pk('composite'), [qw/name id/], 'skip composite pk';
-throws_ok { $loader->table_pk('no_pk') }
-qr/^Could not find primary key/,
-'caught exception pk not found';
-
-Mock::MySQL->do($_) for (
-    q{ DROP TABLE composite },
-    q{ DROP TABLE no_pk },
-);
+is_deeply $loader->table_pk('composite'), [qw/name id/], 'composite pk';
+is_deeply $loader->table_pk('no_pk'), [], 'no primary key';
 
 my $schema = DBIx::Skinny::Schema::Loader->new;
 ok $schema->connect($dsn, $username, $password), 'connected loader';

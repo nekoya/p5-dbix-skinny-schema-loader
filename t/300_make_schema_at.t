@@ -34,9 +34,19 @@ install_table books => schema {
     columns qw/id author_id name/;
 };
 
+install_table composite => schema {
+    pk qw/id name/;
+    columns qw/id name/;
+};
+
 install_table genders => schema {
     pk qw/name/;
     columns qw/name/;
+};
+
+install_table no_pk => schema {
+    pk qw//;
+    columns qw/code name/;
 };
 
 install_table prefectures => schema {

@@ -27,7 +27,7 @@ my $created_at = sub {
 
 my $table_template = << '...';
 install_table [% table %] => schema {
-    pk '[% pk %]';
+    pk qw/[% pk %]/;
     columns qw/[% columns %]/;
     trigger pre_insert => $created_at;
 };
@@ -54,25 +54,37 @@ use DBIx::Skinny::Schema;
 install_utf8_columns qw/jpname title content/;
 
 install_table authors => schema {
-    pk 'id';
+    pk qw/id/;
     columns qw/id gender_name pref_name name/;
     trigger pre_insert => $created_at;
 };
 
 install_table books => schema {
-    pk 'id';
+    pk qw/id/;
     columns qw/id author_id name/;
     trigger pre_insert => $created_at;
 };
 
+install_table composite => schema {
+    pk qw/id name/;
+    columns qw/id name/;
+    trigger pre_insert => $created_at;
+};
+
 install_table genders => schema {
-    pk 'name';
+    pk qw/name/;
     columns qw/name/;
     trigger pre_insert => $created_at;
 };
 
+install_table no_pk => schema {
+    pk qw//;
+    columns qw/code name/;
+    trigger pre_insert => $created_at;
+};
+
 install_table prefectures => schema {
-    pk 'name';
+    pk qw/name/;
     columns qw/id name/;
     trigger pre_insert => $created_at;
 };

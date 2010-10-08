@@ -46,7 +46,7 @@ sub table_pk {
     my $columns = $self->table_columns($table);
     return [$columns->[0]] if scalar @$columns == 1;
     return ['id'] if ( grep { $_ eq 'id' } @$columns );
-    croak "Could not find primary key of $table";
+    return [];
 }
 
 1;
