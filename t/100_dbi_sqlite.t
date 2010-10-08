@@ -23,22 +23,6 @@ throws_ok { DBIx::Skinny::Schema::Loader::DBI::SQLite->new({ dsn => '', user => 
     qr/^Can't connect to data source/,
     'failed to connect DB';
 
-$dbh->do($_) for (
-    qq{
-        CREATE TABLE composite (
-            id   int,
-            name text,
-            primary key (id, name)
-        )
-    },
-    qq{
-        CREATE TABLE no_pk (
-            code int,
-            name text
-        )
-    }
-);
-
 ok my $loader = DBIx::Skinny::Schema::Loader::DBI::SQLite->new({
         dsn => $testdsn, user => $testuser, pass => $testpass
     }), 'created loader impl object';

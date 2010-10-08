@@ -4,14 +4,14 @@ use DBIx::Skinny setup => +{};
 sub setup_test_db {
     my $self = shift;
     my @statements = (
-        qq{
+        q{
             CREATE TABLE books (
                 id         serial primary key,
                 author_id  int,
                 name       varchar(255)
             )
         },
-        qq{
+        q{
             CREATE TABLE authors (
                 id           int,
                 gender_name  varchar(255),
@@ -19,17 +19,30 @@ sub setup_test_db {
                 name         varchar(255)
             )
         },
-        qq{
+        q{
             CREATE TABLE genders (
                 name  varchar(255)
             )
         },
-        qq{
+        q{
             CREATE TABLE prefectures (
                 id    int,
                 name  varchar(255) primary key
             )
-        }
+        },
+        q{
+            CREATE TABLE composite (
+                id   int,
+                name varchar(255),
+                primary key (id, name)
+            )
+        },
+        q{
+            CREATE TABLE no_pk (
+                code int,
+                name varchar(255)
+            )
+        },
     );
     $self->do($_) for @statements;
 }
@@ -37,10 +50,12 @@ sub setup_test_db {
 sub clean_test_db {
     my $self = shift;
     my @statements = (
-        q{ DROP TABLE prefectures },
-        q{ DROP TABLE genders },
-        q{ DROP TABLE authors },
-        q{ DROP TABLE books },
+        q{ DROP TABLE IF EXISTS no_pk },
+        q{ DROP TABLE IF EXISTS composite },
+        q{ DROP TABLE IF EXISTS prefectures },
+        q{ DROP TABLE IF EXISTS genders },
+        q{ DROP TABLE IF EXISTS authors },
+        q{ DROP TABLE IF EXISTS books },
     );
     $self->do($_) for @statements;
 }

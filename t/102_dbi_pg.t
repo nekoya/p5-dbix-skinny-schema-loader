@@ -25,34 +25,15 @@ ok my $loader = DBIx::Skinny::Schema::Loader::DBI::Pg->new({
 is_deeply $loader->tables, [qw/authors books genders prefectures/], 'tables';
 is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
 
-is $loader->table_pk('authors'), 'id', 'authors pk';
-is $loader->table_pk('books'), 'id', 'books pk';
-is $loader->table_pk('genders'), 'name', 'genders pk';
-is $loader->table_pk('prefectures'), 'name', 'prefectures pk';
+is_deeply $loader->table_pk('authors'), ['id'], 'authors pk';
+is_deeply $loader->table_pk('books'), ['id'], 'books pk';
+is_deeply $loader->table_pk('genders'), ['name'], 'genders pk';
+is_deeply $loader->table_pk('prefectures'), ['name'], 'prefectures pk';
 
-Mock::Pg->do($_) for (
-    q{
-    CREATE TABLE composite (
-        id   int,
-        name varchar(255),
-        primary key (id, name)
-    ) },
-    q{
-    CREATE TABLE no_pk (
-        code int,
-        name varchar(255)
-    ) },
-);
-
-is $loader->table_pk('composite'), '', 'skip composite pk';
+is_deeply $loader->table_pk('composite'), [qw/name id/], 'skip composite pk';
 throws_ok { $loader->table_pk('no_pk') }
 qr/^Could not find primary key/,
 'caught exception pk not found';
-
-Mock::Pg->do($_) for (
-    q{ DROP TABLE composite },
-    q{ DROP TABLE no_pk },
-);
 
 my $schema = DBIx::Skinny::Schema::Loader->new;
 ok $schema->connect($dsn, $username, $password), 'connected loader';
