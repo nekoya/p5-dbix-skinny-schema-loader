@@ -129,11 +129,11 @@ sub _make_install_table_text {
     my $table   = $params->{ table };
     my $pk      = join " ", @{ $params->{ pk    }   };
     my $columns = join " ", @{ $params->{ columns } };
-    $template ||=
-           "install_table [% table %] => schema {\n".
-           "    pk qw/[% pk %]/;\n".
-           "    columns qw/[% columns %]/;\n".
-           "};\n\n";
+    unless ($template) {
+        $template  = "install_table [% table %] => schema {\n";
+        $template .= "    pk qw/[% pk %]/;\n" if $pk;
+        $template .= "    columns qw/[% columns %]/;\n};\n\n";
+    }
 
     $template =~ s/\[% table %\]/$table/g;
     $template =~ s/\[% pk %\]/$pk/g;

@@ -45,7 +45,6 @@ install_table genders => schema {
 };
 
 install_table no_pk => schema {
-    pk qw//;
     columns qw/code name/;
 };
 
