@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.15    Fri Oct  8 11:59:07 2010
+        - supported table definition without primary key
+
 0.14    Thu Sep 17 09:44:06 2010
         - make_schema_at and ->connect() takes DBIx::Skinny style connection parameters. (thanks tokuhirom)
 

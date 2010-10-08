@@ -245,8 +245,6 @@ in case of primary key is not defined at DB, Loader find PK following logic.
 1. if table has only one column, use it
 2. if table has column 'id', use it
 
-unless found PK yet, Loader throws exception.
-
 =head1 ADDITIONAL SETTINGS FOR load_schema
 
 Here is how to use additional settings:
