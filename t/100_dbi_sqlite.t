@@ -35,7 +35,7 @@ is_deeply $loader->table_pk('books'), ['id'], 'books pk';
 is_deeply $loader->table_pk('genders'), ['name'], 'genders pk';
 is_deeply $loader->table_pk('prefectures'), ['name'], 'prefectures pk';
 
-is_deeply $loader->table_pk('composite'), [qw/id name/], 'composite pk';
+is_deeply [sort @{$loader->table_pk('composite')}], [qw/id name/], 'composite pk';
 is_deeply $loader->table_pk('no_pk'), [], 'no primary key';
 
 my $schema = DBIx::Skinny::Schema::Loader->new;
