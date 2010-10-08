@@ -22,7 +22,7 @@ qr/^Can't connect to data source/,
 ok my $loader = DBIx::Skinny::Schema::Loader::DBI::Pg->new({
     dsn => $dsn, user => $username, pass => $password
 }), 'created loader object';
-is_deeply $loader->tables, [qw/authors books genders prefectures/], 'tables';
+is_deeply $loader->tables, [qw/authors books composite genders no_pk prefectures/], 'tables';
 is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
 
 is_deeply $loader->table_pk('authors'), ['id'], 'authors pk';

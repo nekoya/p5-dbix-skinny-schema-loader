@@ -50,12 +50,12 @@ sub setup_test_db {
 sub clean_test_db {
     my $self = shift;
     my @statements = (
-        q{ DROP TABLE IF EXISTS no_pk },
-        q{ DROP TABLE IF EXISTS composite },
-        q{ DROP TABLE IF EXISTS prefectures },
-        q{ DROP TABLE IF EXISTS genders },
-        q{ DROP TABLE IF EXISTS authors },
-        q{ DROP TABLE IF EXISTS books },
+        q{ DROP TABLE no_pk },
+        q{ DROP TABLE composite },
+        q{ DROP TABLE prefectures },
+        q{ DROP TABLE genders },
+        q{ DROP TABLE authors },
+        q{ DROP TABLE books },
     );
     $self->do($_) for @statements;
 }
