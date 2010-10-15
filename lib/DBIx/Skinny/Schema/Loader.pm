@@ -111,7 +111,7 @@ sub make_schema_at {
             columns => $self->{ impl }->table_columns($_),
         },
         $options->{ table_template }
-    ) for @{ $self->{ impl }->tables };
+    ) for @{ $self->_get_tables($options->{ ignore_rules }) };
     $schema .= $self->_insert_template($options->{ after_template });
     $schema .= "1;";
     return $schema;
@@ -139,6 +139,19 @@ sub _make_install_table_text {
     $template =~ s/\[% pk %\]/$pk/g;
     $template =~ s/\[% columns %\]/$columns/g;
     return $template;
+}
+
+sub _get_tables {
+    my ($self, $ignore_rules) = @_;
+    my @tables;
+    for my $table ( @{ $self->{ impl }->tables } ) {
+        my $ignore;
+        for my $rule ( @$ignore_rules ) {
+            $ignore++ and last if $table =~ $rule;
+        }
+        push @tables, $table unless $ignore;
+    }
+    return \@tables;
 }
 
 1;
@@ -359,6 +372,12 @@ C<make_schema_at> replaces some following variables.
 [% table %]   ... table name
 [% pk %]      ... primary keys joined by a space
 [% columns %] ... columns joined by a space
+
+=head2 ignore_rules
+
+tables matched rules are not targeting schema.
+
+  ignore_rules => [ qr/rs$/, qr/^no/ ],
 
 =head1 LAZY SCHEMA LOADING
 
