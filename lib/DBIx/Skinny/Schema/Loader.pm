@@ -375,7 +375,7 @@ C<make_schema_at> replaces some following variables.
 
 =head2 ignore_rules
 
-tables matched rules are not targeting schema.
+you can exclude tables that matching any rules declared in ignore_rules from the schema.
 
   ignore_rules => [ qr/rs$/, qr/^no/ ],
 
