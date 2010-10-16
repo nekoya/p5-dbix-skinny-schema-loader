@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.16    Sat Oct 16 10:14:21 2010
+        - added ignore_rules option for make_schema_at
+
 0.15    Fri Oct  8 11:59:07 2010
         - supported table definition without primary key
 
