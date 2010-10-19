@@ -305,7 +305,6 @@ insert your custom template before install_table block.
       $args->{ created_at } ||= DateTime->now;
     }
   }
-  ...
 
   print make_schema_at(
       'Your::DB::Schema',
@@ -330,6 +329,8 @@ after_template inserts template after install_table block.
       },
       [ 'dbi:SQLite:test.db', '', '' ]
   );
+
+there are more detailed example in C<$before_template> section.
 
 you can use both before_template and after_template all together.
 
