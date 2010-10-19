@@ -23,7 +23,7 @@ ok my $schema = make_schema_at(
     [ 'dbi:SQLite:test.db', '', '' ]
 ), 'got schema class file content by make_schema_at';
 
-$schema =~ /^# generated (20\d\d\-\d\d\-\d\d .{3} \d\d:\d\d:\d\d)/m;
+$schema =~ /^# generated ([A-Z][a-z]{2} [A-Z][a-z]{2} \d\d \d\d:\d\d:\d\d 20\d\d)/m;
 my $timestamp = $1;
 
 is "$schema\n", << "...", 'assert content';
