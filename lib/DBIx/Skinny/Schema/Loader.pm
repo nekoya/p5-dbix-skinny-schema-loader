@@ -40,6 +40,8 @@ sub supported_drivers {
 
 sub connect {
     my $self = shift;
+    return if defined $self->{ impl };
+
     my $opts;
     if (@_ == 1) {
         $opts = +{
@@ -97,9 +99,9 @@ sub get_skinny_connect_info {
 }
 
 sub make_schema_at {
+    my $self = (ref $_[0] eq 'DBIx::Skinny::Schema::Loader') ? shift : __PACKAGE__->new;
     my ($schema_class, $options, $connect_info) = @_;
 
-    my $self = __PACKAGE__->new;
     $self->connect(ref $connect_info eq 'HASH' ? $connect_info : @{ $connect_info });
 
     my $schema = $self->_insert_header;
