@@ -40,7 +40,7 @@ subtest using_foo_schema => sub {
     done_testing;
 };
 
-subtest using_foo_schema => sub {
+subtest using_bar_schema => sub {
     $loader->{schema} = 'bar';
 
     is_deeply $loader->tables, [qw/ genders no_pk prefectures /], 'tables';
