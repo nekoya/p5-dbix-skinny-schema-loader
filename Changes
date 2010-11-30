@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.18    Tue Nov 30 12:27:57 2010
+        - followed up Skinny's update(0.0728) (thanks nekokak)
+         - avoid deprecated warnings
+
 0.17    Wed Nov  3 21:48:38 2010
         - support PostgreSQL's schema (thanks magicalhat)
         - publish some comments with make_schema_at()

@@ -3,7 +3,7 @@ name 'DBIx-Skinny-Schema-Loader';
 all_from 'lib/DBIx/Skinny/Schema/Loader.pm';
 
 requires 'Exporter';
-requires 'DBIx::Skinny' => '0.0714'; # required this version for "pk qw/composite key/;"
+requires 'DBIx::Skinny' => '0.0728';
 
 author_tests('xt');
 
