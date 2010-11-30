@@ -1,5 +1,5 @@
 package Mock::Pg;
-use DBIx::Skinny setup => +{};
+use DBIx::Skinny connect_info => +{};
 
 sub setup_test_db {
     my $self = shift;

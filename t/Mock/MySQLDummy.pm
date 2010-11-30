@@ -1,6 +1,6 @@
 package Mock::MySQLDummy;
 
-use DBIx::Skinny setup => +{
+use DBIx::Skinny connect_info => +{
     dsn => 'dbi:mysql:testdatabase',
     username => 'user',
     password => 'passwd',

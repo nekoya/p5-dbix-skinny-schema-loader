@@ -71,7 +71,7 @@ sub connect {
 sub load_schema {
     my ($class, $connect_info) = @_;
     my $self = $class->new;
-    $connect_info ||= $class->get_skinny_connect_info;
+    $connect_info ||= $class->_get_skinny_connect_info;
     $self->connect(
         $connect_info->{ dsn },
         $connect_info->{ username },
@@ -88,13 +88,11 @@ sub load_schema {
     return $self;
 }
 
-sub get_skinny_connect_info {
-    my ($class, $connect_info) = @_;
+sub _get_skinny_connect_info {
+    my $class = shift;
     $class = ref $class || $class;
     (my $skinny_class = $class) =~ s/::Schema//;
-    my $attr = $skinny_class->attribute;
-    $connect_info->{ $_ } = $attr->{ $_ } for qw/dsn username password connect_options/;
-    return $connect_info;
+    return $skinny_class->connect_info;
 }
 
 sub make_schema_at {
