@@ -13,6 +13,5 @@ test_requires 'Test::More';
 test_requires 'Test::Exception';
 include 'Sub::Uplevel';
 
-use_test_base;
 auto_include;
 WriteAll;
