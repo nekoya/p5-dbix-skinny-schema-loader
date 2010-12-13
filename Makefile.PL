@@ -13,5 +13,4 @@ test_requires 'Test::More';
 test_requires 'Test::Exception';
 include 'Sub::Uplevel';
 
-auto_include;
 WriteAll;
