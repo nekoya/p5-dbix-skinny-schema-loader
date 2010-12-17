@@ -1,7 +1,11 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
-0.19    Mon Dec 13 17:33:19 2010
+0.20    Fri Dec 17 13:03:51 2010
         - removed "auto_include" from Makefile.PL (thanks charsbar)
+
+0.19    Mon Dec 13 17:33:19 2010
+        - release missed.
+        - this version is same to 0.18
 
 0.18    Tue Nov 30 12:27:57 2010
         - followed up Skinny's update(0.0728) (thanks nekokak)
