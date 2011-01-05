@@ -84,6 +84,7 @@ sub load_schema {
         my $pk = $self->{ impl }->table_pk($table);
         $schema->{ $table }->{ pk } = $pk if $pk;
         $schema->{ $table }->{ columns } = $self->{ impl }->table_columns($table);
+        $schema->{ $table }->{ row_class } = DBIx::Skinny::Util::mk_row_class($class, $table);
     }
     return $self;
 }
