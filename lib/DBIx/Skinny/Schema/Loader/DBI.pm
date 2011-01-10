@@ -40,6 +40,7 @@ sub table_pk {
     my ($self, $table) = @_;
     my @keys = $self->{ dbh }->primary_key(undef, undef, $table);
     if ( @keys ) {
+        @keys = map { lc($_) } @keys;
         return \@keys;
         # return $#keys ? '' : $keys[0];
     }
