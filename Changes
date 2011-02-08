@@ -1,5 +1,11 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.21    Tue Fec  8 21:14:55
+        - followed DBIx::Skinny update
+         - DBIx::Skinny::Util::mk_row_class
+         - require DBIx::Skinny 0.0733
+        - treat primary key as lowercase (thanks dragon3)
+
 0.20    Fri Dec 17 13:03:51 2010
         - removed "auto_include" from Makefile.PL (thanks charsbar)
 
