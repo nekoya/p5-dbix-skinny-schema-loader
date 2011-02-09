@@ -1,6 +1,9 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
-0.21    Tue Fec  8 21:14:55
+0.22    Tue Feb  9 11:43:39
+        - fixed wrong test skip count (thanks magicalhat)
+
+0.21    Tue Feb  8 21:14:55
         - followed DBIx::Skinny update
          - DBIx::Skinny::Util::mk_row_class
          - require DBIx::Skinny 0.0733
