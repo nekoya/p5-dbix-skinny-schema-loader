@@ -32,7 +32,7 @@ SKIP: {
 
     my ( $dsn, $username, $password ) =
       @ENV{ map { "SKINNY_MYSQL_${_}" } qw/DSN USER PASS/ };
-    skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test', 2
+    skip 'Set $ENV{SKINNY_MYSQL_DSN}, _USER and _PASS to run this test', 4
       unless ( $dsn && $username );
 
     Mock::MySQL::UcPk->connect(
