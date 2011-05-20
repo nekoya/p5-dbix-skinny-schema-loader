@@ -14,6 +14,7 @@ sub import {
 
     my @functions = qw(
     make_schema_at
+    make_schema_tidily_at
     );
 
     for my $func ( @args ) {
@@ -118,6 +119,17 @@ sub make_schema_at {
     $schema .= $self->_insert_template($options->{ after_template });
 
     $schema .= "1;";
+    return $schema;
+}
+
+sub make_schema_tidily_at {
+    my $self = (ref $_[0] eq 'DBIx::Skinny::Schema::Loader') ? shift : __PACKAGE__->new;
+    my $indent = ' ' x 4;
+    my $schema = $self->make_schema_at(@_);
+    $schema =~ s{qw/([^/]*)/}{
+        my $cols = join "\n${indent}${indent}", split / +/, $1;
+        "qw/\n${indent}${indent}${cols}\n${indent}/";
+    }xeg;
     return $schema;
 }
 
