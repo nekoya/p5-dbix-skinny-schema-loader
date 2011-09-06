@@ -58,7 +58,7 @@ sub connect {
             connect_options => $connect_options || {},
         };
     }
-    $opts->{dsn} =~ /^dbi:([^:]+):/;
+    $opts->{dsn} =~ /^dbi:([^:]+):/i;
     my $driver = $1 or croak "Could not parse DSN";
     croak "$driver is not supported by DBIx::Skinny::Schema::Loader yet"
         unless grep { /^$driver$/ } $self->supported_drivers;
