@@ -1,9 +1,12 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
-0.22    Tue Feb  9 11:43:39
+0.23    Tue Sep  7 15:59:32 2011
+        - ignore case when parsing dsn (thanks hayajo)
+
+0.22    Tue Feb  9 11:43:39 2011
         - fixed wrong test skip count (thanks magicalhat)
 
-0.21    Tue Feb  8 21:14:55
+0.21    Tue Feb  8 21:14:55 2011
         - followed DBIx::Skinny update
          - DBIx::Skinny::Util::mk_row_class
          - require DBIx::Skinny 0.0733
