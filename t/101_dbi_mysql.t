@@ -25,10 +25,10 @@ ok my $loader = DBIx::Skinny::Schema::Loader::DBI::mysql->new({
 is_deeply $loader->tables, [qw/authors books composite genders no_pk prefectures/], 'tables';
 is_deeply $loader->table_columns('books'), [qw/id author_id name/], 'table_columns';
 
-is_deeply $loader->table_pk('authors'), ['id'], 'authors pk';
-is_deeply $loader->table_pk('books'), ['id'], 'books pk';
-is_deeply $loader->table_pk('genders'), ['name'], 'genders pk';
-is_deeply $loader->table_pk('prefectures'), ['name'], 'prefectures pk';
+is_deeply $loader->table_pk('authors'), [], 'authors pk';
+is_deeply $loader->table_pk('books'), 'id', 'books pk';
+is_deeply $loader->table_pk('genders'), [], 'genders pk';
+is_deeply $loader->table_pk('prefectures'), 'name', 'prefectures pk';
 
 is_deeply [sort @{$loader->table_pk('composite')}], [qw/id name/], 'composite pk';
 is_deeply $loader->table_pk('no_pk'), [], 'no primary key';

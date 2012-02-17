@@ -41,12 +41,8 @@ sub table_pk {
     my @keys = $self->{ dbh }->primary_key(undef, undef, $table);
     if ( @keys ) {
         @keys = map { lc($_) } @keys;
-        return \@keys;
-        # return $#keys ? '' : $keys[0];
+        return $#keys ? \@keys : $keys[0];
     }
-    my $columns = $self->table_columns($table);
-    return [$columns->[0]] if scalar @$columns == 1;
-    return ['id'] if ( grep { $_ eq 'id' } @$columns );
     return [];
 }
 
