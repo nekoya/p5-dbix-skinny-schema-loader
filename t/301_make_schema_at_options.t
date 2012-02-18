@@ -60,7 +60,7 @@ install_utf8_columns qw/jpname title content/;
 # ---- end of custom template ----
 
 install_table authors => schema {
-    pk qw/id/;
+    pk qw//;
     columns qw/id gender_name pref_name name/;
     trigger pre_insert => \$created_at;
 };
@@ -78,7 +78,7 @@ install_table composite => schema {
 };
 
 install_table genders => schema {
-    pk qw/name/;
+    pk qw//;
     columns qw/name/;
     trigger pre_insert => \$created_at;
 };
