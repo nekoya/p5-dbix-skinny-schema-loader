@@ -28,7 +28,6 @@ package Mock::DB::Schema;
 use DBIx::Skinny::Schema;
 
 install_table authors => schema {
-    pk qw/id/;
     columns qw/id gender_name pref_name name/;
 };
 
@@ -43,7 +42,6 @@ install_table composite => schema {
 };
 
 install_table genders => schema {
-    pk qw/name/;
     columns qw/name/;
 };
 
