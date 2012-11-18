@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Skinny::Schema::Loader
 
+0.25    Sun Nov 18 13:56:01 2012
+        - update Module::Install
+
 0.24    Sun Feb 19 23:49:15 2012
         - primary key detection behavior was changed to get the value after insert. (thanks nyo-kichi)
          - incompatible update
